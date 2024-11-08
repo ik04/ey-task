@@ -43,7 +43,7 @@ export const Dialer: React.FC = () => {
           onChange={(e) => setDialedNumber(e.target.value)}
           placeholder="Enter Number"
           max={12}
-          className="display text-center text-gray-300 font-mono text-xl border border-gray-300 w-60 bg-transparent p-2"
+          className="display text-center text-gray-300 font-mono text-xl border border-gray-300 w-60 bg-transparent p-3 rounded-full"
         />
       </div>
       <div className="keys grid grid-cols-3 gap-5">
