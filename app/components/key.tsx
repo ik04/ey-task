@@ -8,7 +8,7 @@ export const Key: React.FC<KeyProps> = ({
   extraAction,
   onShortPress,
 }) => {
-  const longPressThreshold = 500;
+  const longPressThreshold = 800;
   const [pressStart, setPressStart] = useState<number | null>(null);
 
   const handleMouseDown = () => {
