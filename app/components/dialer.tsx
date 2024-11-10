@@ -1,6 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Phone, Delete, CircleX } from "lucide-react";
+import { Key } from "./key";
+import twilio from "twilio";
 
 interface KeyProps {
   keyLabel: string;
@@ -8,27 +10,6 @@ interface KeyProps {
   extraAction?: () => void;
   onShortPress: (keyLabel: string) => void;
 }
-
-const Key: React.FC<KeyProps> = ({
-  keyLabel,
-  notation,
-  extraAction,
-  onShortPress,
-}) => {
-  return (
-    <button
-      className="flex flex-col items-center justify-center h-16 w-16 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-      onClick={() => onShortPress(keyLabel)}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        extraAction?.();
-      }}
-    >
-      <span className="text-2xl text-white">{keyLabel}</span>
-      {notation && <span className="text-xs text-gray-400">{notation}</span>}
-    </button>
-  );
-};
 
 export const Dialer: React.FC = () => {
   const [dialedNumber, setDialedNumber] = useState<string>("");
@@ -79,6 +60,26 @@ export const Dialer: React.FC = () => {
     }
   };
 
+  const makeCall = async () => {
+    try {
+      const response = await fetch("/api/call", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to: dialedNumber }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Call SID:", data.sid);
+      } else {
+        console.error("Failed to make a call:", data.error);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col space-y-10 items-center p-6 rounded-lg">
       <div className="flex space-x-2 items-center">
@@ -114,6 +115,7 @@ export const Dialer: React.FC = () => {
         )}
 
         <button
+          onClick={makeCall}
           disabled={isConnecting || !dialedNumber}
           className={`h-16 w-16 rounded-full flex justify-center items-center transition-colors ${
             isConnecting || !dialedNumber

@@ -1,3 +1,4 @@
+"use client";
 import { Dialer } from "./components/dialer";
 
 export default function Home() {
